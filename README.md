@@ -1,0 +1,120 @@
+[使用说明.txt]
+========================================================
+        JAVA学生信息管理系统  使用说明
+        技术：Java Swing + JDBC + MySQL
+========================================================
+
+一、运行环境
+--------------------------------------------------------
+1. JDK 8 及以上（已按 Java 8 目标版本编译，JDK 8/11/17/21 均可直接运行）
+2. MySQL 5.7 或 8.0（本机为 PHPStudy 自带 MySQL 5.7.26）
+3. MySQL 驱动：lib/mysql-connector-java-8.0.30.jar（已随包提供，无需另下载）
+
+二、最简单的方式：双击运行（推荐）
+--------------------------------------------------------
+1. 先启动 PHPStudy，点击【启动】MySQL（确认端口 3306，绿灯）。
+2. 双击本目录下的【启动程序.bat】。
+   启动器会自动查找电脑上的 JDK：系统 PATH → JAVA_HOME →
+   IDEA 下载的 JDK（.jdks）→ C:\Program Files\Java 等目录，
+   不需要手动配置环境变量，也不需要改任何配置。
+3. 程序会自动完成：创建数据库 student_management → 创建 students 表 → 加载数据。
+4. 若弹出“数据库连接失败”，请看第六节排查。
+5. 若提示“没有检测到 Java 运行环境”，说明电脑还没有 JDK：
+   · 办法一：安装 JDK 8 或更高版本（安装时勾选 Add to PATH），再双击本文件；
+   · 办法二：按第三节用 IntelliJ IDEA 打开并运行（IDEA 自带 JDK，最省事）。
+
+三、用 IntelliJ IDEA 打开（交作业/演示用）
+--------------------------------------------------------
+1. IDEA → File → Open → 选择本文件夹（或直接打开 src 所在目录）。
+2. 若提示没有 JDK：File → Project Structure → Project → SDK 选择本机 JDK。
+3. 依赖已放在 lib 目录：
+   File → Project Structure → Modules → Dependencies → “+” → JARs or Directories
+   → 选择 lib/mysql-connector-java-8.0.30.jar → Apply。
+4. 运行 src/JAVA/Main.java 的 main 方法即可。
+5. 重要：File → Settings → Editor → File Encodings，
+   把 Global / Project Encoding 都设为 UTF-8，否则中文会乱码。
+
+四、数据库账号密码（换电脑必看）
+--------------------------------------------------------
+打开 src/JAVA/Main.java，文件开头第 20~24 行：
+
+    private static final String DB_HOST = "localhost";
+    private static final String DB_PORT = "3306";
+    private static final String DB_NAME = "student_management";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "root";   // 改成你电脑 MySQL 的密码
+
+PHPStudy 默认是 root / root；如果你改过密码，把 DB_PASS 改成自己的即可。
+数据库不存在也没关系，程序会自动创建。
+
+五、手动导入数据库（可选）
+--------------------------------------------------------
+用 Navicat / phpMyAdmin / 命令行导入 sql/student_management.sql 即可，
+里面已包含建库、建表和 4 条示例数据。
+
+命令行方式：
+  mysql -uroot -proot < sql/student_management.sql
+
+六、常见错误排查
+--------------------------------------------------------
+1）“Communications link failure”
+   → PHPStudy 里 MySQL 没启动，或端口不是 3306。
+
+2）“Access denied for user 'root'@'localhost'”
+   → 密码不对，修改 Main.java 里的 DB_PASS。
+
+3）“Unknown database 'student_management'”
+   → 正常不会出现（程序会自动建库）；若出现，手动执行第五节的 SQL。
+
+4）“找不到 MySQL 驱动类 com.mysql.cj.jdbc.Driver”
+   → IDEA 没把 lib/mysql-connector-java-8.0.30.jar 加入依赖，
+     按第三节第 3 步添加。
+
+5）界面中文变成问号或乱码
+   → File → Settings → Editor → File Encodings 全部改成 UTF-8，重新运行。
+
+6）Public Key Retrieval is not allowed
+   → 连接串已带 allowPublicKeyRetrieval=true，一般不会出现；
+     若仍报错，确认使用的是 8.0.x 驱动。
+
+七、功能清单
+--------------------------------------------------------
+· 添加学生（学号唯一，年龄 1~100，成绩 0~100 校验）
+· 修改学生（先选中表格行，改完点【修改】）
+· 删除学生（选中行 → 删除 → 二次确认）
+· 刷新列表
+· 清空表单
+· 关键字查询（学号 / 姓名 / 专业 模糊匹配）
+· 点击表格行自动回填到下方表单
+· 底部状态栏实时显示连接状态与记录总数
+
+八、目录结构
+--------------------------------------------------------
+JAVA学生信息管理系统/
+├── StudentManagement.jar          可直接运行的 jar 包
+├── 启动程序.bat                   双击启动
+├── lib/
+│   └── mysql-connector-java-8.0.30.jar
+
+
+# 编译输出（不要提交）
+out/
+build/
+dist/
+target/
+bin/
+
+
+# 系统 / 编辑器临时文件
+.DS_Store
+Thumbs.db
+*.log
+
+├── src/
+│   ├── JAVA/Main.java             主程序（全部功能）
+│   └── COM/                       实体类与视图（扩展保留）
+├── sql/
+│   └── student_management.sql     数据库脚本
+└── 使用说明.txt
+
+个人小提示：先启动 PHPStudy 的 MySQL（绿灯），再双击 启动程序.bat，程序窗口出来后底部状态栏会显示「数据库连接正常……共 4 条记录」。
